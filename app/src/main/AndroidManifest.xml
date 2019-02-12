@@ -23,11 +23,8 @@
             android:name="com.google.ar.core"
             android:value="required" />
 
-        <activity android:name=".ArActivity">
-
-        </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ArActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
 

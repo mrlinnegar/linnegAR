@@ -31,6 +31,7 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.MaterialFactory;
@@ -79,15 +80,6 @@ public class ArActivity extends AppCompatActivity {
 
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdateFrame);
 
-        arFragment.setOnTapArPlaneListener(
-                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                    if (modelRenderable == null) {
-                        return;
-                    }
-
-                    Anchor anchor = hitResult.createAnchor();
-                    addParty(anchor);
-                });
         loadModels();
 
     }
@@ -110,14 +102,14 @@ public class ArActivity extends AppCompatActivity {
         }
 
         augmentedImageDatabase = new AugmentedImageDatabase(mSession);
-        augmentedImageDatabase.addImage("animals", augmentedImageBitmap);
+        augmentedImageDatabase.addImage("cover", augmentedImageBitmap);
 
         config.setAugmentedImageDatabase(augmentedImageDatabase);
         return true;
     }
 
     private Bitmap loadAugmentedImage(){
-        try (InputStream is = getAssets().open("animals.jpg")){
+        try (InputStream is = getAssets().open("cover.jpeg")){
             return BitmapFactory.decodeStream(is);
         }
         catch (IOException e){
@@ -160,12 +152,13 @@ public class ArActivity extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             Node node = new Node();
             float distance = 0.8f;
-            float height = rand.nextFloat() * distance * 4;
+            float height = rand.nextFloat() * distance ;
             float x = (rand.nextFloat() * distance) - (distance / 2);
             float z = (rand.nextFloat() * distance) - (distance / 2);
 
             node.setParent(anchorNode);
-            node.setLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
+            float scale = rand.nextFloat() + 0.25f;
+            node.setLocalScale(new Vector3(scale, scale, scale));
             node.setLocalPosition(new Vector3(x, height, z));
 
             MaterialFactory.makeOpaqueWithColor(this, new Color(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 0.8f))
